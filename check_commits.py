@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+
+import argparse
+import logging
+import os
+import sys
+
+
+if __name__ == "__main__":
+
+    """
+    Let's grab my runtime options
+    """
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-v", "--verbose", action="append_const", help="Verbosity Controls",
+                        const=1, default=[])
+
+    args = parser.parse_args()
+
+    VERBOSE = len(args.verbose)
+
+    if VERBOSE == 0:
+        logging.basicConfig(level=logging.ERROR)
+    elif VERBOSE == 1:
+        logging.basicConfig(level=logging.WARNING)
+    elif VERBOSE == 2:
+        logging.basicConfig(level=logging.INFO)
+    elif VERBOSE > 2:
+        logging.basicConfig(level=logging.DEBUG)
+
+    logger = logging.getLogger("check_commits")
+
