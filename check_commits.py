@@ -42,5 +42,7 @@ for currentpath, folders, files in os.walk(_workdir):
         print(this_abs_file)
 
 
-subprocess.run("git log", shell=True)
+log_cmd = subprocess.run("git log", shell=True, capture_output=True)
+
+print(log_cmd.stdout)
 
