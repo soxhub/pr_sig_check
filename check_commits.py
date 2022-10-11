@@ -5,6 +5,8 @@ import logging
 import os
 import sys
 
+_workdir = "/github/workspace"
+
 
 if __name__ == "__main__":
 
@@ -31,4 +33,10 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG)
 
     logger = logging.getLogger("check_commits")
+
+
+for currentpath, folders, files in os.walk(_workdir):
+    for this_file in files:
+        this_abs_file = "{}/{}".format(currentpath, this_file)
+        print(this_abs_file)
 
