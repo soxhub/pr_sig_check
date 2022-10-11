@@ -4,6 +4,7 @@ import argparse
 import logging
 import os
 import sys
+import subprocess
 
 _workdir = "/github/workspace"
 
@@ -39,4 +40,7 @@ for currentpath, folders, files in os.walk(_workdir):
     for this_file in files:
         this_abs_file = "{}/{}".format(currentpath, this_file)
         print(this_abs_file)
+
+
+subprocess.run("git log", shell=True)
 
