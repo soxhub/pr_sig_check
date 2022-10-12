@@ -36,13 +36,23 @@ if __name__ == "__main__":
     logger = logging.getLogger("check_commits")
 
 
-for currentpath, folders, files in os.walk(_workdir):
-    for this_file in files:
-        this_abs_file = "{}/{}".format(currentpath, this_file)
-        print(this_abs_file)
+#for currentpath, folders, files in os.walk(_workdir):
+#    for this_file in files:
+#        this_abs_file = "{}/{}".format(currentpath, this_file)
+#        print(this_abs_file)
 
+env_cmds = '''
+echo GITHUB_REF : ${GITHUB_REF} ; 
+echo GITHUB_REF_NAME : ${GITHUB_REF_NAME} ;
+echo GITHUB_BASE_REF : ${GITHUB_BASE_REF} ; 
+echo GITHUB_HEAD_REF : ${GITHUB_HEAD_REF} ; 
+echo GITHUB_EVENT_NAME : ${GITHUB_EVENT_NAME} ;
+'''
 
 log_cmd = subprocess.run("git log", shell=True, capture_output=True)
+print(log_cmd.stdout.decode())
 
-print(log_cmd.stdout)
+env_cmd = subprocess.run(env_cmds, shell=True, capture_output=True)
+print(env_cmd.stdout.decode())
+
 
