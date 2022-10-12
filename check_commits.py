@@ -5,9 +5,9 @@ import logging
 import os
 import sys
 import subprocess
+from ghapi.all import GhApi
 
 _workdir = "/github/workspace"
-
 
 if __name__ == "__main__":
 
@@ -35,8 +35,7 @@ if __name__ == "__main__":
 
     logger = logging.getLogger("check_commits")
 
-
-#for currentpath, folders, files in os.walk(_workdir):
+# for currentpath, folders, files in os.walk(_workdir):
 #    for this_file in files:
 #        this_abs_file = "{}/{}".format(currentpath, this_file)
 #        print(this_abs_file)
@@ -55,4 +54,30 @@ print(log_cmd.stdout.decode())
 env_cmd = subprocess.run(env_cmds, shell=True, capture_output=True)
 print(env_cmd.stdout.decode())
 
+api = GhApi()
 
+if os.getenv("GITHUB_EVENT_NAME") != "pull_request":
+    logger.error("Non-Pull Requests not Yet Supported")
+    sys.exit(1)
+
+pull_number = os.getenv("GITHUB_REF").split("/")[2]
+
+iteration = 0
+continue_iteration = True
+all_commits = list()
+
+while continue_iteration is True:
+    logger.debug("Getting Page {} of Results.".format(iteration))
+
+    these_commits = api.pulls.list_commits(owner=os.getenv("GITHUB_REPOSITORY_OWNER"),
+                                           repo=os.getenv("GITHUB_REPOSITORY"),
+                                           pull_number=pull_number,
+                                           per_page=50,
+                                           iteration=iteration)
+
+    all_commits.extend(these_commits)
+
+    if len(these_commits) < 50:
+        continue_iteration = False
+
+print(all_commits)
