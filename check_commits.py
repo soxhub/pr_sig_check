@@ -85,7 +85,7 @@ while continue_iteration is True:
 failures_commits = 0
 
 for commit in all_commits:
-    if commit["commit"]["verification"] is True and commit["commit"]["verification"] == "valid":
+    if commit["commit"]["verification"] is True:
         # Valid Commit
         print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
     else:
