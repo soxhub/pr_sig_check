@@ -82,4 +82,22 @@ while continue_iteration is True:
     if len(these_commits) < 50:
         continue_iteration = False
 
-print(all_commits)
+failures_commits = 0
+
+for commit in all_commits:
+    if commit["commit"]["verification"] is True and commit["commit"]["verification"] == "valid":
+        # Valid Commit
+        print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
+    else:
+        print("Commit {} is Unvalidated by Github.".format(commit["sha"][:7]))
+        failures_commits += 1
+
+    # Organization Checks Here in Future
+
+if failures_commits > 0:
+    # Future Comment Back to Pull request logic
+    print("There are {} unsigned commits in this pull request.".format(failures_commits))
+    sys.exit(1)
+else:
+    print("Check passed all commits are properly signed.")
+    sys.exit(0)
