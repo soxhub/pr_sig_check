@@ -71,8 +71,8 @@ all_commits = list()
 while continue_iteration is True:
     logger.debug("Getting Page {} of Results.".format(iteration))
 
-    these_commits = api.pulls.list_commits(owner=os.getenv("GITHUB_REPOSITORY_OWNER"),
-                                           repo=os.getenv("GITHUB_REPOSITORY"),
+    these_commits = api.pulls.list_commits(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
+                                           repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
                                            pull_number=pull_number,
                                            per_page=50,
                                            iteration=iteration)
