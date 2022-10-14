@@ -1,15 +1,14 @@
 name: 'pr_sig_check'
 description: 'Checks your PRs for Signatures'
-#inputs:
-#  who-to-greet:  # id of input
-#    description: 'Who to greet'
-#    required: true
-#    default: 'World'
-#outputs:
-#  time: # id of output
-#    description: 'The time we greeted you'
+inputs:
+  orgcheck:
+    description: "Limit 'Acceptable' Organizations to the following list (comma seperated)."
+    required: false
+    default: ""
+  domaincheck:
+    description: "Limit 'Acceptable' committer emails to the following list (comma seperated)."
+    required: false
+    default: ""
 runs:
   using: 'docker'
   image: 'Dockerfile'
-#  args:
-#    - ${{ inputs.who-to-greet }}
