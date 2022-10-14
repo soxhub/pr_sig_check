@@ -85,15 +85,17 @@ while continue_iteration is True:
 failures_commits = 0
 
 for commit in all_commits:
-    if commit["commit"]["verification"] is True:
+    if commit["commit"]["verification"]["verified"] is True:
         # Valid Commit
         print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
     else:
-        print("Commit {} is Unvalidated by Github.".format(commit["sha"][:7]))
+        print("Commit {} is Unvalidated by Github for reason {}.".format(commit["sha"][:7],
+                                                                         commit["commit"]["verification"]["reason"]))
         print(commit)
         failures_commits += 1
 
-    # Organization Checks Here in Future
+        # Organization Checks Here in Future
+        # Email Checks Here in the Future
 
 if failures_commits > 0:
     # Future Comment Back to Pull request logic
