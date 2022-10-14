@@ -90,6 +90,7 @@ for commit in all_commits:
         print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
     else:
         print("Commit {} is Unvalidated by Github.".format(commit["sha"][:7]))
+        print(commit)
         failures_commits += 1
 
     # Organization Checks Here in Future
