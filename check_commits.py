@@ -53,8 +53,8 @@ print(log_cmd.stdout.decode())
 
 env_cmd = subprocess.run(env_cmds, shell=True, capture_output=True)
 print(env_cmd.stdout.decode())
-
-api = GhApi()
+# set token here
+api = GhApi(token=os.environ.get("ACTIONS_RUNTIME_TOKEN"))
 
 if os.getenv("GITHUB_EVENT_NAME") != "pull_request":
     logger.error("Non-Pull Requests not Yet Supported")
