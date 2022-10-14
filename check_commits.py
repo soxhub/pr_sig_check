@@ -46,6 +46,8 @@ echo GITHUB_REF_NAME : ${GITHUB_REF_NAME} ;
 echo GITHUB_BASE_REF : ${GITHUB_BASE_REF} ; 
 echo GITHUB_HEAD_REF : ${GITHUB_HEAD_REF} ; 
 echo GITHUB_EVENT_NAME : ${GITHUB_EVENT_NAME} ;
+echo GITHUB_REPOSITORY_OWNER : ${GITHUB_REPOSITORY_OWNER} ;
+echo GITHUB_REPOSITORY : ${GITHUB_REPOSITORY} ;
 '''
 
 log_cmd = subprocess.run("git log", shell=True, capture_output=True)
@@ -54,7 +56,7 @@ print(log_cmd.stdout.decode())
 env_cmd = subprocess.run(env_cmds, shell=True, capture_output=True)
 print(env_cmd.stdout.decode())
 # set token here
-api = GhApi(token=os.environ.get("ACTIONS_RUNTIME_TOKEN"))
+api = GhApi()
 
 if os.getenv("GITHUB_EVENT_NAME") != "pull_request":
     logger.error("Non-Pull Requests not Yet Supported")
