@@ -131,6 +131,7 @@ for commit in all_commits:
         failures_users += 1
     else:
         #print("User validation checks successfully passed.")
+        pass
 
 if failures_commits > 0 or failures_users > 0:
     sys.exit(1)
