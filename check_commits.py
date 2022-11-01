@@ -125,7 +125,7 @@ for commit in all_commits:
     else:
         print("Check passed all commits are properly signed.")
 
-    check_user = check_helpers.UserCheck(author=commit["author"]["login"], orglist=orgcheck, domainlist=domaincheck)
+    check_user = check_helpers.UserCheck(author=commit["author"], orglist=orgcheck, domainlist=domaincheck)
 
     if check_user.issue is True:
         print("Issues with User: \n{}".format("/n".join(check_user.issues)))
