@@ -80,11 +80,14 @@ if os.getenv("GITHUB_EVENT_NAME") != "pull_request":
 
 orgcheck = os.getenv("INPUT_ORGCHECK", "").split(",")
 if len(orgcheck) == 0:
-    logger.error("Organization Check is Disabled")
+    print("Organization Check is Disabled")
+print("OrgCheck : {}".format(orgcheck))
 
 domaincheck = os.getenv("INPUT_DOMAINCHECK", "").split(",")
 if len(domaincheck) == 0:
-    logger.error("Domaincheck is Disabled")
+    print("Domaincheck is Disabled")
+
+print("DomainCheck : {}".format(domaincheck))
 
 
 pull_number = os.getenv("GITHUB_REF").split("/")[2]
