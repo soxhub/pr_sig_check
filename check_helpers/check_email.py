@@ -44,7 +44,7 @@ class UserCheck:
         if domain not in self.domainlist:
             # Failure
             self.issue = True
-            self.issues.append("User's domain of {} not known {}".format(domain, ",".join(self.domianlist)))
+            self.issues.append("User's domain of {} not known {}".format(domain, ",".join(self.domainlist)))
         else:
             self.logger.info("User's domain of {} okay")
             pass
