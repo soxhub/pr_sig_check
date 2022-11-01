@@ -78,12 +78,12 @@ if os.getenv("GITHUB_EVENT_NAME") != "pull_request":
     logger.error("Non-Pull Requests not Yet Supported")
     sys.exit(1)
 
-orgcheck = os.getenv("INPUT_ORGCHECK", "").split(",")
+orgcheck = [x for x in os.getenv("INPUT_ORGCHECK", "").split(",") if len(x) > 0]
 if len(orgcheck) == 0:
     print("Organization Check is Disabled")
 print("OrgCheck : {}".format(orgcheck))
 
-domaincheck = os.getenv("INPUT_DOMAINCHECK", "").split(",")
+domaincheck = [x for x in os.getenv("INPUT_DOMAINCHECK", "").split(",") if len(x) > 0]
 if len(domaincheck) == 0:
     print("Domaincheck is Disabled")
 
