@@ -116,7 +116,8 @@ failures_users = 0
 for commit in all_commits:
     if commit["commit"]["verification"]["verified"] is True:
         # Valid Commit
-        print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
+        #print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
+        pass
     else:
         print("Commit {} is Unvalidated by Github for reason {}.".format(commit["sha"][:7],
                                                                          commit["commit"]["verification"]["reason"]))
