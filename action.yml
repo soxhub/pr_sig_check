@@ -1,10 +1,10 @@
 name: 'pr_sig_check'
 description: 'Checks your PRs for Signatures'
 inputs:
-  orgcheck:
-    description: "Limit 'Acceptable' Organizations to the following list (comma seperated)."
-    required: false
-    default: ""
+  #orgcheck:
+  #  description: "Limit 'Acceptable' Organizations to the following list (comma seperated)."
+  #  required: false
+  #  default: ""
   domaincheck:
     description: "Limit 'Acceptable' committer emails to the following list (comma seperated)."
     required: false

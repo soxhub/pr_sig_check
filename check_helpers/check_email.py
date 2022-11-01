@@ -19,9 +19,11 @@ class UserCheck:
         self.issue = False
         self.issues = list()
 
+        print(self.domainlist)
         if len(self.domainlist) > 0:
             self.check_domains()
 
+        print(self.domainlist)
         if len(self.orglist) > 0:
             self.check_orgs()
 
