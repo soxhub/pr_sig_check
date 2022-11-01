@@ -5,7 +5,10 @@ import logging
 import os
 import sys
 import subprocess
+
 from ghapi.all import GhApi
+
+import check_helpers
 
 _workdir = "/github/workspace"
 
@@ -23,6 +26,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     VERBOSE = len(args.verbose)
+
+    try:
+        runtime_verbose = int(os.getenv("INPUT_VERBOSE"))
+    except Exception as Error:
+        print("Unexpected Verbose input error {}".format(Error))
+        runtime_verbose = 0
+    else:
+        if len(args.verbose) > 0:
+            print("Using hardcoded verbosity, ignoring 'with: verbose' option")
+        elif runtime_verbose >= 0:
+            VERBOSE = runtime_verbose
 
     if VERBOSE == 0:
         logging.basicConfig(level=logging.ERROR)
@@ -48,6 +62,8 @@ echo GITHUB_HEAD_REF : ${GITHUB_HEAD_REF} ;
 echo GITHUB_EVENT_NAME : ${GITHUB_EVENT_NAME} ;
 echo GITHUB_REPOSITORY_OWNER : ${GITHUB_REPOSITORY_OWNER} ;
 echo GITHUB_REPOSITORY : ${GITHUB_REPOSITORY} ;
+echo INPUT_ORGCHECK : ${INPUT_ORGCHECK} ;
+echo INPUT_DOMAINCHECK : ${INPUT_DOMAINCHECK} ;
 '''
 
 log_cmd = subprocess.run("git log", shell=True, capture_output=True)
@@ -61,6 +77,15 @@ api = GhApi()
 if os.getenv("GITHUB_EVENT_NAME") != "pull_request":
     logger.error("Non-Pull Requests not Yet Supported")
     sys.exit(1)
+
+orgcheck = os.getenv("INPUT_ORGCHECK").split(",")
+if len(orgcheck) == 0:
+    logger.warning("Organization Check is Disabled")
+
+domaincheck = os.getenv("INPUT_DOMAINCHECK").split(",")
+if len(domaincheck) == 0:
+    logger.warning("Domaincheck is Disabled")
+
 
 pull_number = os.getenv("GITHUB_REF").split("/")[2]
 
@@ -83,6 +108,7 @@ while continue_iteration is True:
         continue_iteration = False
 
 failures_commits = 0
+failures_users = 0
 
 for commit in all_commits:
     if commit["commit"]["verification"]["verified"] is True:
@@ -94,13 +120,21 @@ for commit in all_commits:
         print(commit)
         failures_commits += 1
 
-        # Organization Checks Here in Future
-        # Email Checks Here in the Future
+    if failures_commits > 0:
+        print("There are {} unsigned commits in this pull request.".format(failures_commits))
+    else:
+        print("Check passed all commits are properly signed.")
 
-if failures_commits > 0:
-    # Future Comment Back to Pull request logic
-    print("There are {} unsigned commits in this pull request.".format(failures_commits))
+    check_user = check_helpers.UserCheck(author=commit["author"]["login"], orglist=orgcheck, domainlist=domaincheck)
+
+    if check_user.issue is True:
+        print("Issues with User: \n{}".format("/n".join(check_user.issues)))
+        failures_users += 1
+    else:
+        print("User validation checks successfully passed.")
+
+if failures_commits > 0 or failures_users > 0:
     sys.exit(1)
 else:
-    print("Check passed all commits are properly signed.")
     sys.exit(0)
+

@@ -9,6 +9,10 @@ inputs:
     description: "Limit 'Acceptable' committer emails to the following list (comma seperated)."
     required: false
     default: ""
+  verbose:
+    description: "Verbosity as a number with higher numbers representing more verbosity."
+    required: false
+    default: 0
 runs:
   using: 'docker'
   image: 'Dockerfile'
