@@ -28,19 +28,20 @@ class UserCheck:
     def check_orgs(self):
 
         in_org = False
+        username = self.commit["author"].get("login")
 
         for org in self.orglist:
             try:
-                self.api.orgs.check_membership_for_user(org=org, username=self.commit["author"].get("login"))
+                self.api.orgs.check_membership_for_user(org=org, username=username)
             except Exception as not_in_error:
-                self.logger.debug("User not in the organization: {}".format(not_in_error))
+                self.logger.error("User not in the organization: {}".format(not_in_error))
             else:
                 # User is in this Org
                 in_org = True
 
         if in_org is False:
             self.issue = True
-            self.issues.append("User is not in any of the following organizations : {}".format(", ".join(self.orglist)))
+            self.issues.append("User {} is not in any of the following organizations : {}".format(username, ", ".join(self.orglist)))
 
 
     def check_domains(self):
@@ -49,7 +50,7 @@ class UserCheck:
 
         email = self.commit["commit"]["author"]["email"]
 
-        domain = email.split("@")
+        domain = email.split("@")[1]
 
         if domain not in self.domainlist:
             # Failure
