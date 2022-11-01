@@ -31,9 +31,18 @@ class UserCheck:
         in_org = False
 
         for org in self.orglist:
-            orgmatch = self.api.orgs.check_membership_for_user(org=org, username=self.username)
+            try:
+                orgmatch = self.api.orgs.check_membership_for_user(org=org, username=self.username)
+            except Exception as not_in_error:
+                self.logger.debug("User not in the organization: {}".format(not_in_error))
+            else:
+                # User is in this Org
+                in_org = True
 
-            self.logger.info(orgmatch)
+        if in_org is False:
+            self.issue = True
+            self.issues.append("User is not in any of the following organizations : {}".format(",".join(self.orglist)))
+
 
     def check_domains(self):
 
