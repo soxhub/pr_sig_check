@@ -130,7 +130,7 @@ for commit in all_commits:
         print("Issues with User: \n{}".format("\n\t".join(check_user.issues)))
         failures_users += 1
     else:
-        print("User validation checks successfully passed.")
+        #print("User validation checks successfully passed.")
 
 if failures_commits > 0 or failures_users > 0:
     sys.exit(1)
