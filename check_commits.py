@@ -134,7 +134,6 @@ for commit in all_commits:
         pass
 
 if failures_commits > 0 or failures_users > 0:
+    print("There has been one or more issues. Failing Build")
     sys.exit(1)
-else:
-    sys.exit(0)
 
