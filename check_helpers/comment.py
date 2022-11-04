@@ -15,7 +15,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
     :return:
     '''
 
-    logger = logging.GetLogger("write_comment")
+    logger = logging.getLogger("write_comment")
     api = GhApi
     repo = git.Repo()
 
