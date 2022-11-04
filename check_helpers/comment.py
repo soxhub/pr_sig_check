@@ -22,6 +22,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
     print("Failure Messages: {}".format(messages))
 
     for commit, message in messages:
+
         files_changed = repo.git.diff(commit, name_only=True).split()
 
         all_comments = api.pulls.list_review_comments(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
@@ -46,9 +47,12 @@ Please correct the following items:
                                                 body=bad_comment)
         '''
 
-        api.pull.create_review_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
-                                       repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
-                                       pull_number=pull_number,
-                                       body=bad_comment,
-                                       commit_id=commit,
-                                       path=files_changed[0])
+        try:
+            api.pull.create_review_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
+                                           repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
+                                           pull_number=pull_number,
+                                           body=bad_comment,
+                                           commit_id=commit,
+                                           path=files_changed[0])
+        except Exception as comment_error:
+            print("Commenting Error {}".format(comment_error))
