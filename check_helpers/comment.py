@@ -19,7 +19,10 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
     api = GhApi
     repo = git.Repo()
 
+    print("Failure Messages: {}".format(messages))
+
     for commit, message in messages:
+
 
         files_changed = repo.git.diff(commit, name_only=True).split()
 
