@@ -11,6 +11,7 @@ from ghapi.all import GhApi
 import check_helpers
 
 _workdir = "/github/workspace"
+_github_sig_validate_url = "https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification"
 
 if __name__ == "__main__":
 
@@ -57,7 +58,7 @@ if __name__ == "__main__":
 env_cmds = '''
 echo GITHUB_REF : ${GITHUB_REF} ; 
 echo GITHUB_REF_NAME : ${GITHUB_REF_NAME} ;
-echo GITHUB_BASE_REF : ${GITHUB_BASE_REF} ; 
+echo GITHUB_BASE_REF : ${GITHUB_BASE_REF} ;
 echo GITHUB_HEAD_REF : ${GITHUB_HEAD_REF} ; 
 echo GITHUB_EVENT_NAME : ${GITHUB_EVENT_NAME} ;
 echo GITHUB_REPOSITORY_OWNER : ${GITHUB_REPOSITORY_OWNER} ;
@@ -89,7 +90,6 @@ if len(domaincheck) == 0:
 
 print("DomainCheck : {}".format(domaincheck))
 
-
 pull_number = os.getenv("GITHUB_REF").split("/")[2]
 
 iteration = 0
@@ -112,16 +112,22 @@ while continue_iteration is True:
 
 failures_commits = 0
 failures_users = 0
+failure_messages = dict()
 
 for commit in all_commits:
     if commit["commit"]["verification"]["verified"] is True:
         # Valid Commit
-        #print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
+        # print("Commit {} is Validated by Github.".format(commit["sha"][:7]))
         pass
     else:
+
         print("Commit {} is Unvalidated by Github for reason {}.".format(commit["sha"][:7],
                                                                          commit["commit"]["verification"]["reason"]))
         print(commit)
+
+        failure_messages[commit["sha"]] = ["Commit [{}]({}) is Unverified.".format(commit["sha"][:7],
+                                                                                  commit["html_url"])]
+
         failures_commits += 1
 
     check_user = check_helpers.UserCheck(commit=commit, orglist=orgcheck, domainlist=domaincheck)
@@ -129,11 +135,21 @@ for commit in all_commits:
     if check_user.issue is True:
         print("Issues with User: \n{}".format("\n\t".join(check_user.issues)))
         failures_users += 1
+
+        if commit["sha"] in failure_messages.keys():
+            failure_messages[commit["sha"]].extend(check_user.issues)
+        else:
+            failure_messages[commit["sha"]] = check_user.issues
+
     else:
-        #print("User validation checks successfully passed.")
+        # print("User validation checks successfully passed.")
         pass
 
 if failures_commits > 0 or failures_users > 0:
     print("There has been one or more issues. Failing Build")
-    sys.exit(1)
 
+    # Write Comment(s)
+    check_helpers.write_comment(is_failure=True, messages=failure_messages,
+                                pull_number=pull_number)
+
+    sys.exit(1)
