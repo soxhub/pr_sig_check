@@ -152,4 +152,6 @@ if failures_commits > 0 or failures_users > 0:
     check_helpers.write_comment(is_failure=True, messages=failure_messages,
                                 pull_number=pull_number)
 
+    print("Failure Message: {}".format(failure_messages))
+
     sys.exit(1)
