@@ -31,7 +31,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
 Please correct the following items: 
 {}
-'''.format("* ".join(messages))
+'''.format("* ".join(fmt_messages))
 
     for comment in all_comments:
 
