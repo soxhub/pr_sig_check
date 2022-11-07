@@ -21,7 +21,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     print("Failure Messages: {}".format(messages))
 
-    fmt_messages = ["* {commit} {message}".format(commit[:7], message) for commit, message in messages.keys()]
+    fmt_messages = ["* {commit} {message}".format(commit[:7], message) for commit, message in messages.items()]
 
     all_comments = api.issue.list_comments(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
                                            repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
