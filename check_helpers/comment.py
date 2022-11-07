@@ -35,6 +35,8 @@ Please correct the following items:
 
     found_comment = False
 
+    print("Wanted Comment: \n{}".format(bad_comment))
+
     for comment in all_comments:
 
         if comment["body"].startswith("pr_sig_check report:"):
