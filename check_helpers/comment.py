@@ -33,16 +33,28 @@ Please correct the following items:
 {}
 '''.format("* ".join(fmt_messages))
 
+    found_comment = False
+
     for comment in all_comments:
 
         if comment["body"].startswith("pr_sig_check report:"):
             # existing comments
+            found_comment = True
+
+            print("Updating Comment : {}".format(comment))
             api.issue.update_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
                                      repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
                                      comment_id=comment["id"],
                                      body=bad_comment)
-        else:
+
+            break
+
+    if found_comment is False:
+        print("Found No existing comment, creating a new one.")
+        try:
             api.issue.create_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
                                      repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
                                      issue_number=pull_number,
                                      body=bad_comment)
+        except Exception as error:
+            print("Unable to Comment on PR {}".format(error))
