@@ -21,38 +21,28 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     print("Failure Messages: {}".format(messages))
 
-    for commit, message in messages:
+    fmt_messages = ["* {commit} {message}".format(commit[:7], message) for commit, message in messages.keys()]
 
-        files_changed = repo.git.diff(commit, name_only=True).split()
+    all_comments = api.issue.list_comments(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
+                                           repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
+                                           issue_number=pull_number)
 
-        all_comments = api.pulls.list_review_comments(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
-                                                      repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
-                                                      pull_number=pull_number)
-
-        bad_comment = '''pr_sig_check report:
+    bad_comment = '''pr_sig_check report:
 
 Please correct the following items: 
 {}
-
 '''.format("* ".join(messages))
 
-        '''found_comment = False
+    for comment in all_comments:
 
-        for comment in all_comments:
-            if comment["commit_id"] == commit:
-                found_comment = True
-                api.pulls.update_review_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
-                                                repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
-                                                comment_id=comment["id"],
-                                                body=bad_comment)
-        '''
-
-        try:
-            api.pull.create_review_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
-                                           repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
-                                           pull_number=pull_number,
-                                           body=bad_comment,
-                                           commit_id=commit,
-                                           path=files_changed[0])
-        except Exception as comment_error:
-            print("Commenting Error {}".format(comment_error))
+        if comment["body"].startswith("pr_sig_check report:"):
+            # existing comments
+            api.issue.update_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
+                                     repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
+                                     comment_id=comment["id"],
+                                     body=bad_comment)
+        else:
+            api.issue.create_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
+                                     repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
+                                     issue_number=pull_number,
+                                     body=bad_comment)
