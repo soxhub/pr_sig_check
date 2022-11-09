@@ -33,14 +33,6 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
     except Exception as error:
         print("unable to get pr with error {}".format(error))
 
-    print("Making a test comment")
-    try:
-        pr.create_issue_comment("This is a Test")
-    except Exception as test_comment_error:
-        print("Unable to Make Test Comment.")
-    else:
-        print("Test Comment Made")
-
     all_comments = pr.get_issue_comments()
 
     bad_comment = '''pr_sig_check report:
