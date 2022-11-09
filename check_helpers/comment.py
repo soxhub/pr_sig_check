@@ -25,8 +25,11 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     fmt_messages = ["* {commit} {message}".format(commit=commit[:7], message=message) for commit, message in messages.items()]
 
-    repo = pyapi.get_repo(os.getenv("GITHUB_REPOSITORY"))
-    pr = repo.get_pull(pull_number)
+    try:
+        repo = pyapi.get_repo(os.getenv("GITHUB_REPOSITORY"))
+        pr = repo.get_pull(pull_number)
+    except Exception as error:
+        print("unable to get pr with error {}".format(error))
 
     print("Making a test comment")
     pr.create_issue_comment("This is a Test")
