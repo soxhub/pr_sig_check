@@ -26,13 +26,20 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     try:
         repo = pyapi.get_repo(os.getenv("GITHUB_REPOSITORY"))
+    except Exception as repo_error:
+        print("Unable to get repository : {}".format(os.getenv("GITHUB_REPOSITORY")))
+    try:
         pr = repo.get_pull(int(pull_number))
     except Exception as error:
         print("unable to get pr with error {}".format(error))
 
     print("Making a test comment")
-    pr.create_issue_comment("This is a Test")
-    print("Test Comment Made")
+    try:
+        pr.create_issue_comment("This is a Test")
+    except Exception as test_comment_error:
+        print("Unable to Make Test Comment.")
+    else:
+        print("Test Comment Made")
 
     all_comments = pr.get_issue_comments()
 
