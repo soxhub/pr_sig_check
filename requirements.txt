@@ -1,3 +1,4 @@
 requests>=2.28.1
 ghapi>=1.0.3
 GitPython>=3.1.29
+pygithub>=1.57

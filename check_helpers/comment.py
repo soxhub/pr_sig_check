@@ -3,6 +3,7 @@
 import os
 import logging
 from ghapi.all import GhApi
+from github import Github
 import git
 
 
@@ -16,16 +17,22 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
     '''
 
     logger = logging.getLogger("write_comment")
-    api = GhApi
+    api = GhApi()
+    pyapi = Github()
     repo = git.Repo()
 
     print("Failure Messages: {}".format(messages))
 
     fmt_messages = ["* {commit} {message}".format(commit=commit[:7], message=message) for commit, message in messages.items()]
 
-    all_comments = api.issue.list_comments(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
-                                           repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
-                                           issue_number=pull_number)
+    repo = pyapi.get_repo(os.getenv("GITHUB_REPOSITORY"))
+    pr = repo.get_pull(pull_number)
+
+    print("Making a test comment")
+    pr.create_issue_comment("This is a Test")
+    print("Test Comment Made")
+
+    all_comments = pr.get_issue_comments()
 
     bad_comment = '''pr_sig_check report:
 
@@ -33,30 +40,15 @@ Please correct the following items:
 {}
 '''.format("* ".join(fmt_messages))
 
-    found_comment = False
-
     print("Wanted Comment: \n{}".format(bad_comment))
 
     for comment in all_comments:
 
-        if comment["body"].startswith("pr_sig_check report:"):
-            # existing comments
-            found_comment = True
+        if comment.body.startswith("pr_sig_check report:"):
+            comment.delete()
 
-            print("Updating Comment : {}".format(comment))
-            api.issue.update_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
-                                     repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
-                                     comment_id=comment["id"],
-                                     body=bad_comment)
-
-            break
-
-    if found_comment is False:
-        print("Found No existing comment, creating a new one.")
-        try:
-            api.issue.create_comment(owner=os.getenv("GITHUB_REPOSITORY").split("/")[0],
-                                     repo=os.getenv("GITHUB_REPOSITORY").split("/")[1],
-                                     issue_number=pull_number,
-                                     body=bad_comment)
-        except Exception as error:
-            print("Unable to Comment on PR {}".format(error))
+    print("Found No existing comment, creating a new one.")
+    try:
+        pr.create_issue_comment(body=bad_comment)
+    except Exception as error:
+        print("Unable to Comment on PR {}".format(error))
