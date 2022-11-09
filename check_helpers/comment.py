@@ -18,7 +18,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     logger = logging.getLogger("write_comment")
     api = GhApi()
-    pyapi = Github()
+    pyapi = Github(login_or_token=os.environ.get("GITHUB_TOKEN"))
     repo = git.Repo()
 
     print("Failure Messages: {}".format(messages))
