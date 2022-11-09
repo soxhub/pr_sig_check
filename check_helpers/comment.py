@@ -22,7 +22,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     print("Failure Messages: {}".format(messages))
 
-    fmt_messages = ["* {commit} {message}".format(commit=commit[:7], message="\n\t* ".join(message)) for commit, message in messages.items()]
+    fmt_messages = ["* {commit} \n\t* {message}".format(commit=commit[:7], message="\n\t* ".join(message)) for commit, message in messages.items()]
 
     try:
         repo = pyapi.get_repo(os.getenv("GITHUB_REPOSITORY"))
