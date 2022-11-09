@@ -19,7 +19,6 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
     logger = logging.getLogger("write_comment")
     api = GhApi()
     pyapi = Github(login_or_token=os.environ.get("GITHUB_TOKEN"))
-    repo = git.Repo()
 
     print("Failure Messages: {}".format(messages))
 
@@ -27,7 +26,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     try:
         repo = pyapi.get_repo(os.getenv("GITHUB_REPOSITORY"))
-        pr = repo.get_pull(pull_number)
+        pr = repo.get_pull(int(pull_number))
     except Exception as error:
         print("unable to get pr with error {}".format(error))
 
