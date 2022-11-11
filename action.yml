@@ -1,10 +1,10 @@
 name: 'pr_sig_check'
 description: 'Checks your PRs for Signatures'
 inputs:
-  #orgcheck:
-  #  description: "Limit 'Acceptable' Organizations to the following list (comma seperated)."
-  #  required: false
-  #  default: ""
+  orgcheck:
+    description: "Limit 'Acceptable' Organizations to the following list (comma seperated), only works for public organizations"
+    required: false
+    default: ""
   domaincheck:
     description: "Limit 'Acceptable' committer emails to the following list (comma seperated)."
     required: false
@@ -13,6 +13,10 @@ inputs:
     description: "Verbosity as a number with higher numbers representing more verbosity."
     required: false
     default: 0
+  notifyonly:
+    description: "Instead of Failing the Build, simply comment and move on. (yes/no, default no)"
+    required: false
+    default: "no"
 runs:
   using: 'docker'
   image: 'Dockerfile'

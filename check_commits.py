@@ -65,6 +65,8 @@ echo GITHUB_REPOSITORY_OWNER : ${GITHUB_REPOSITORY_OWNER} ;
 echo GITHUB_REPOSITORY : ${GITHUB_REPOSITORY} ;
 echo INPUT_ORGCHECK : ${INPUT_ORGCHECK} ;
 echo INPUT_DOMAINCHECK : ${INPUT_DOMAINCHECK} ;
+echo INPUT_VERBOSE : ${INPUT_VERBOSE} ;
+echo INPUT_NOTIFYONLY : ${INPUT_NOTIFYONLY} ;
 '''
 
 log_cmd = subprocess.run("git log", shell=True, capture_output=True)
@@ -154,4 +156,8 @@ if failures_commits > 0 or failures_users > 0:
 
     print("Failure Message: {}".format(failure_messages))
 
-    sys.exit(1)
+    if os.environ.get("INPUT_NOTIFYONLY", "no") == "yes":
+        # Fail the Build
+        sys.exit(1)
+    else:
+        print("In Notify only Mode, not failing thebuild.")
