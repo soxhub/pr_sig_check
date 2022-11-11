@@ -22,7 +22,7 @@ def write_comment(is_failure=True, messages={}, pull_number=None, **kwargs):
 
     print("Failure Messages: {}".format(messages))
 
-    fmt_messages = ["* {commit} \n\t* {message}".format(commit=commit[:7], message="\n\t* ".join(message)) for commit, message in messages.items()]
+    fmt_messages = ["\n* {commit} \n\t* {message}".format(commit=commit[:7], message="\n\t* ".join(message)) for commit, message in messages.items()]
 
     try:
         repo = pyapi.get_repo(os.getenv("GITHUB_REPOSITORY"))
@@ -45,10 +45,11 @@ Please correct the following items:
 
     for comment in all_comments:
 
+        print("Evaluating Comment : {}".format(comment.body))
+
         if comment.body.startswith("pr_sig_check report:"):
             comment.delete()
 
-    print("Found No existing comment, creating a new one.")
     try:
         pr.create_issue_comment(body=bad_comment)
     except Exception as error:
