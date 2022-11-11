@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Checks Commits Signing
-        uses: soxhub/pr_sig_check@v0.35
+        uses: soxhub/pr_sig_check@v1.0.4
         with:
           domaincheck: "domaina.com,domainb.com"
           orgcheck: "myorg"
@@ -33,4 +33,5 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 ```
 
-Please note that orgcheck can only confirm **public** members at this time.
+Please note that orgcheck can only confirm **public** members at this time. Additionally, there's an option `notifyonly: yes`
+that can be set in the with to make it so that the check just comments on pulls and doesn't fail builds.
