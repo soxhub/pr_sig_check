@@ -156,7 +156,7 @@ if failures_commits > 0 or failures_users > 0:
 
     print("Failure Message: {}".format(failure_messages))
 
-    if os.environ.get("INPUT_NOTIFYONLY", "no") == "yes":
+    if os.environ.get("INPUT_NOTIFYONLY", "no") != "yes":
         # Fail the Build
         sys.exit(1)
     else:
