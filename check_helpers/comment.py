@@ -44,7 +44,7 @@ Please correct the following items:
     ## URL Link
     docs = []
     for x in kwargs.get("custom_url", []):
-        docs.append("\n*[{title}]({url}).".format(x["title"], x["url"]))
+        docs.append("\n*[{title}]({url}).".format(**x))
 
     if len(docs) > 0:
         docstring = "Docs: \n{}".format("".join(docs))
