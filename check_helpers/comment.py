@@ -41,6 +41,16 @@ Please correct the following items:
 {}
 '''.format("* ".join(fmt_messages))
 
+    ## URL Link
+    docs = []
+    for x in kwargs.get("custom_url", []):
+        docs.append("\n*[{title}]({url}).".format(x["title"], x["url"]))
+
+    if len(docs) > 0:
+        docstring = "Docs: \n{}".format("".join(docs))
+
+        bad_comment = bad_comment + docstring
+
     print("Wanted Comment: \n{}".format(bad_comment))
 
     for comment in all_comments:

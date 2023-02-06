@@ -17,6 +17,10 @@ inputs:
     description: "Instead of Failing the Build, simply comment and move on. (yes/no, default no)"
     required: false
     default: "no"
+  customurl:
+    description: "On failure messages link to this customurl."
+    required: false
+    default: ""
 runs:
   using: 'docker'
   image: 'Dockerfile'

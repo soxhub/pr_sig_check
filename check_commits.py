@@ -67,6 +67,7 @@ echo INPUT_ORGCHECK : ${INPUT_ORGCHECK} ;
 echo INPUT_DOMAINCHECK : ${INPUT_DOMAINCHECK} ;
 echo INPUT_VERBOSE : ${INPUT_VERBOSE} ;
 echo INPUT_NOTIFYONLY : ${INPUT_NOTIFYONLY} ;
+echo INPUT_CUSTOMURL : ${INPUT_CUSTOMURL} ;
 '''
 
 log_cmd = subprocess.run("git log", shell=True, capture_output=True)
@@ -89,6 +90,17 @@ print("OrgCheck : {}".format(orgcheck))
 domaincheck = [x for x in os.getenv("INPUT_DOMAINCHECK", "").split(",") if len(x) > 0]
 if len(domaincheck) == 0:
     print("Domaincheck is Disabled")
+
+custom_urls = [{"title": "Github Documentation", "url": "https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits"}]
+custom_urls_raw = [x for x in os.getenv("INPUT_CUSTOMURL", "").split(",") if len(x) > 0]
+if len(custom_urls_raw) == 0:
+    print("No Custom URLs Given")
+else:
+    for x in custom_urls_raw:
+        if ";" in x:
+            custom_urls.append(dict(title= x.split(";")[0], url= x.split(";")[1]))
+        else:
+            custom_urls.append(dict(title="Doc", url=x))
 
 print("DomainCheck : {}".format(domaincheck))
 
@@ -152,7 +164,7 @@ if failures_commits > 0 or failures_users > 0:
 
     # Write Comment(s)
     check_helpers.write_comment(is_failure=True, messages=failure_messages,
-                                pull_number=pull_number)
+                                pull_number=pull_number, custom_url=custom_urls)
 
     print("Failure Message: {}".format(failure_messages))
 
