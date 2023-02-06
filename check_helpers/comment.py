@@ -47,7 +47,7 @@ Please correct the following items:
         docs.append("\n* [{title}]({url}).".format(**x))
 
     if len(docs) > 0:
-        docstring = "Docs: \n{}".format("".join(docs))
+        docstring = "\nDocs: \n{}".format("".join(docs))
 
         bad_comment = bad_comment + docstring
 
