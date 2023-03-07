@@ -7,6 +7,9 @@ from ghapi.all import GhApi
 
 class UserCheck:
 
+    # This is the domain name users who make changes in the Web Interface com in as.
+    _global_domains = ["users.noreply.github.com"]
+
     def __init__(self, commit={}, orglist=[], domainlist=[], **kwargs):
 
         self.logger = logging.getLogger("UserCheck")
@@ -52,7 +55,7 @@ class UserCheck:
 
         domain = email.split("@")[1]
 
-        if domain not in self.domainlist:
+        if domain not in [*self.domainlist, *self._global_domains]:
             # Failure
             self.issue = True
             self.issues.append("User {} domain of {} not known {}".format(email, domain, ", ".join(self.domainlist)))
