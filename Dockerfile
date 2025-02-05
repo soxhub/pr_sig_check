@@ -1,4 +1,4 @@
-FROM 691661262207.dkr.ecr.us-west-2.amazonaws.com/docker-hub/library/python:3.9
+FROM public.ecr.aws/docker/library/python:3.9
 
 COPY requirements.txt /requirements.txt
 COPY check_commits.py /check_commits.py
