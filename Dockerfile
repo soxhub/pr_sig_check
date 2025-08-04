@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.9
+FROM public.ecr.aws/docker/library/python:3.13
 
 COPY requirements.txt /requirements.txt
 COPY check_commits.py /check_commits.py
