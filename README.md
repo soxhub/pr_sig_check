@@ -1,5 +1,9 @@
 # pr_sig_check
 
+------
+*This Project is being migrated over to auditboard/pr_sig_check*
+------
+
 A GH Action to Check the commits of a pull request to see if they're signed. As long as Github believes the commit is
 signed with a gpg or other key this system will see it as signed. This tool **will not** introspect into Github signed
 actions (like pull requests or browser based commits) to see if the consistent pieces are signed. So keep that in mind
